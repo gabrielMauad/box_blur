@@ -13,8 +13,8 @@
 using namespace std;
 
 // CONSTANTS
-static const string INPUT_DIRECTORY = "input";
-static const string OUTPUT_DIRECTORY = "output";
+static const string INPUT_DIRECTORY = "../input";
+static const string OUTPUT_DIRECTORY = "../output";
 static const int FILTER_SIZE = 5;
 static const int NUM_CHANNELS = 3;
 
@@ -76,7 +76,6 @@ void write_image(const string &filename, const image_t &image)
     }
 }
 
-
 single_channel_image_t apply_box_blur(const single_channel_image_t &image, const int filter_size)
 {
     // Get the dimensions of the input image
@@ -89,8 +88,46 @@ single_channel_image_t apply_box_blur(const single_channel_image_t &image, const
     // Calculate the padding size for the filter
     int pad = filter_size / 2;
 
-    // YOUR CODE HERE
+    // Loop through the image pixels, skipping the border pixels
+    int initial_row = pad;
+    int initial_col = pad;
 
+    for (initial_row; initial_row <= (height - pad); initial_row += 1)
+    {
+        for (initial_col; initial_col <= (width - pad); initial_col += 1)
+        {
+            int sum = 0;
+            int filter_row = -pad;
+            int filter_col = -pad;
+            for (filter_row; filter_row < (pad + 1); filter_row += 1)
+            {
+                for (filter_col; filter_col < (pad + 1); filter_col += 1)
+                {
+                    sum = sum + image[initial_row + filter_row][initial_col + filter_col];
+                }
+            }
+            int media = sum / (filter_size * filter_size);
+            result[initial_row][initial_col] = media;
+        }
+    }
+
+    // for (int row = 0; row <= height; row += 1)
+    // {
+    //     for (int col = 0; col <= pad; col += 1)
+    //     {
+    //         result[row][col] = image[row][col];
+    //         result[row][width - col - 1] = image[row][width - col - 1];
+    //     }
+    // }
+
+    // for (int col = 0; col <= width; col += 1)
+    // {
+    //     for (int row = 0; row <= pad; row += 1)
+    //     {
+    //         result[row][col] = image[row][col];
+    //         result[height - row - 1][col] = image[height - row - 1][col];
+    //     }
+    // }
     return result;
 }
 
